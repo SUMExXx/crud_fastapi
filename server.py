@@ -16,7 +16,7 @@ def refresh():
     cur.execute("SELECT * FROM todo")
     res = cur.fetchall()
 
-    return res
+    return {'status': 'success', 'results': len(res), 'todos': res}
 
 
 @app.post("/add/{desc}")
@@ -25,7 +25,7 @@ def addTodo(desc):
     
     cur.execute("INSERT INTO todo (Description) VALUES(%s)", (desc,))
 
-    return refresh()
+    return {'status': 'success'}
 
 
 @app.delete("/delete/{id}")
@@ -33,7 +33,7 @@ def addTodo(desc):
 def deleteTodo(id):
     cur.execute("DELETE FROM todo WHERE Todo_id = %s", (id,))
 
-    return refresh()
+    return {'status': 'success'}
 
 
 @app.put("/update/{id}/{newDesc}")
@@ -41,4 +41,4 @@ def deleteTodo(id):
 def updateTodo(id, newDesc):
     cur.execute("UPDATE todo SET Description= %s where Todo_id=%s", (newDesc, id))
 
-    return refresh()
+    return {'status': 'success'}
