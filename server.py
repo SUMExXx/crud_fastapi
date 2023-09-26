@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 import psycopg2
+from fastapi.middleware.cors import CORSMiddleware
+import json
 
 conn = psycopg2.connect(dbname="verceldb",host="ep-tight-math-26832109-pooler.us-east-1.postgres.vercel-storage.com", port="5432", user="default", password="rwRX5KiB4MDk")
 
@@ -9,6 +11,25 @@ cur = conn.cursor()
 
 app = FastAPI()
 
+origins = [
+    "https://crud-fastapi.onrender.com",
+    
+    "http://localhost",
+    "http://localhost:8080",
+    "http://localhost:3000",
+    "http://localhost:5173",
+    "http://localhost:5000",
+    "http://localhost:8000"
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 @app.get("/todos")
 
 def refresh():
@@ -16,7 +37,12 @@ def refresh():
     cur.execute("SELECT * FROM todo")
     res = cur.fetchall()
 
-    return {'status': 'success', 'results': len(res), 'todos': res}
+    dict = {}
+
+    for i in res:
+        dict[i[0]] = i[1]
+
+    return json.dumps(dict)
 
 
 @app.post("/add/{desc}")
