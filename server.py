@@ -13,7 +13,7 @@ app = FastAPI()
 
 origins = [
     "https://crud-fastapi.onrender.com",
-    
+    "https://todofastapi.netlify.app",
     "http://localhost",
     "http://localhost:8080",
     "http://localhost:3000",
